@@ -15,7 +15,7 @@ function [xo,yo,uo,vo] = MOC_2D_steady_irrotational_wall ( xp,yp,up,vp,geom,para
    [xo,yo,uo,vo] = MOC_2D_steady_irrotational_solve_wall ( xp,yp,up,vp,x_orig,y_orig,u_orig,v_orig,geom,params ) ;
    
    while 1
-      step_current++;
+      step_current=step_current+1;
 % Corrector step
       xcp = xp; ycp = 0.5*(yp+yo) ; ucp = 0.5*(up+uo) ; vcp = 0.5*(vp+vo) ;
      [xn,yn,un,vn] = MOC_2D_steady_irrotational_solve_wall ( xcp,ycp,ucp,vcp,x_orig,y_orig,u_orig,v_orig,geom,params ) ;
@@ -26,13 +26,13 @@ function [xo,yo,uo,vo] = MOC_2D_steady_irrotational_wall ( xp,yp,up,vp,geom,para
       % Check if we converged on the position and on the velocity components
       if (abs(error_pos)<eps_pos && abs(error_vel)<eps_vel)
         break;
-      endif
+      end
       if (step_current>step_max)
         error('The maximum of iterations for the predictor-corrector algorithm has been reached. Stopping the execution...')
-      endif
+      end
    end
    
-endfunction
+end
 
 function [xn,yn,un,vn] = MOC_2D_steady_irrotational_solve_wall ( xp,yp,up,vp,...
                                                                  x_orig,y_orig,u_orig,v_orig,...
@@ -62,13 +62,13 @@ function [xn,yn,un,vn] = MOC_2D_steady_irrotational_solve_wall ( xp,yp,up,vp,...
       xn(i) = -a4/b4 ; % Intersection between 2 lines
     else
       xn(i) = (-b4 - sqrt(b4.^2 - 4*a4.*c4))./(2*c4) ; % Intersection between line and quadratic curves
-    endif
+    end
     
     [abcpoly,yn(i),tangentwall] = MOC_2D_steady_irrotational_get_geometry(xn(i),2,geom) ;
     
     T     = S(i).*(xn(i)-x_orig(i)) + Q(i).*u_orig(i) + R(i).*v_orig(i) ;
     un(i) = T / ( Q(i) + R(i)*tangentwall ) ;
     vn(i) = un(i) * tangentwall ;
-  endfor
+  end
   
-endfunction
+end

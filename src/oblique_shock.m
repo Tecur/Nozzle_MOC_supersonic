@@ -21,7 +21,7 @@
    beta_max = fminbnd ( @(beta) equation_max_theta(gamma,mach_j,beta) , pi/3 , pi/2-0.0001 ) ;
    theta_max = acot(equation_max_theta(gamma,mach_j,beta_max));
    machmax(k,:) = [ mach_j beta_max*180/pi theta_max*180/pi ] ;
-   k++;
+   k=k+1;
  end
  
  figure()
@@ -50,14 +50,14 @@
       betaEval_2 = fzero(@(beta) equation_Theta_Beta_Mach(gamma,mach_j,theta_i,beta), guessBeta);
       
       betadev(j,i,:) = [ theta_i betaEval_1 betaEval_2 ]*180/pi ;
-      i++;
+      i=i+1;
     catch e
       disp('fzero failed')
       break;
     end
    end
    plot(betadev(j,1:(i-1),1),betadev(j,1:(i-1),2),'r',betadev(j,1:(i-1),1),betadev(j,1:(i-1),3),'b'); grid on;hold on; drawnow;
-   j++;
+   j=j+1;
  end
  
  plot(machmax(:,3),machmax(:,2),'k');

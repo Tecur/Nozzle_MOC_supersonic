@@ -37,5 +37,5 @@ function [abc,y,tangent] = MOC_2D_steady_irrotational_get_geometry(x,step,geom)
 %    assert ( x <= xe );
     y       = abc(1) + abc(2) * x + abc(3) * x.^2 ;
     tangent = abc(2) + 2*abc(3) * x ;
-  endif
-endfunction
+  end
+end

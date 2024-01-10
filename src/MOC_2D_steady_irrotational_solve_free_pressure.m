@@ -18,7 +18,7 @@ function [xn,yn,un,vn] = MOC_2D_steady_irrotational_solve_free_pressure ( xp,yp,
   else
     % First estimation with data at point 3
     lambda0 = v_orig(2,1)/u_orig(2,1) ; % slope of the jet boundary
-  endif
+  end
   
 % Solve the system matrix to get the position of the intersection of the C+ characteristic with the wall
 %   Left-running C+ characteristic
@@ -36,4 +36,4 @@ function [xn,yn,un,vn] = MOC_2D_steady_irrotational_solve_free_pressure ( xp,yp,
   un = (Q*T-R*sqrt(V4^2*(Q^2+R^2)-T^2))/(Q^2+R^2);
   vn = sqrt(V4^2-un^2);
   
-endfunction
+end

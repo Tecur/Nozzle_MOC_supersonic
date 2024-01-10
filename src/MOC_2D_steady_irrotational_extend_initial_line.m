@@ -23,29 +23,29 @@ function [indI,X,Y,U,V,LENG_INDI,ind_tri,ind_quad,i_tri,j_tri,i_quad,j_quad] = .
         [X(J,I),Y(J,I),U(J,I),V(J,I)] = MOC_2D_steady_irrotational_internal_point( X(J-1,I-1),Y(J-1,I-1),U(J-1,I-1),V(J-1,I-1),...
                                                                                    X(J-1,I  ),Y(J-1,I  ),U(J-1,I  ),V(J-1,I  ),...
                                                                                    geom,params) ;
-        LENG_INDI(I)++;
+        LENG_INDI(I) = LENG_INDI(I)+1 ;
         if (J==2)
-          ind_tri ++;
+          ind_tri = ind_tri+1;
           i_tri(1:3,ind_tri) = [ I   ; I-1 ; I ] ;
           j_tri(1:3,ind_tri) = [ J-1 ; J-1 ; J ] ;
         else
-          ind_quad ++;
+          ind_quad = ind_quad+1;
           i_quad(1:4,ind_quad) = [ I   ; I-1 ; I-1 ; I ] ;
           j_quad(1:4,ind_quad) = [ J-1 ; J-2 ; J-1 ; J ] ;
-        endif
-     endfor
+        end
+     end
      % Point on the axis of symmetry
-     J++;
+     J = J+1;
      [X(J,I),Y(J,I),U(J,I),V(J,I)] = MOC_2D_steady_irrotational_internal_point( X(J-1,I),-Y(J-1,I),U(J-1,I),-V(J-1,I),...
                                                                                 X(J-1,I), Y(J-1,I),U(J-1,I), V(J-1,I),...
                                                                                 geom,params) ;
-     Y(J,I) += 1.e-6 ; % To avoid singularity on axis
-     LENG_INDI(I)++;
-     ind_tri ++;
+     Y(J,I) = Y(J,I) + 1.e-6 ; % To avoid singularity on axis
+     LENG_INDI(I) = LENG_INDI(I)+1;
+     ind_tri  = ind_tri+1;
      i_tri(1:3,ind_tri) = [ I   ; I-1 ; I ] ;
      j_tri(1:3,ind_tri) = [ J-1 ; J-2 ; J ] ;
-  endfor
+  end
   
   indI = I;
   
-endfunction
+end

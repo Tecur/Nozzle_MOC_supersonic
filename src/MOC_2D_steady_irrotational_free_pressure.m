@@ -21,7 +21,7 @@ function [xo,yo,uo,vo] = MOC_2D_steady_irrotational_free_pressure ( xw,yw,uw,vw,
    % The first estimation can lead to complex numbers, keep only the real part for the corrector step
    xo=real(xo); yo=real(yo); uo=real(uo); vo=real(vo);
    while 1
-      step_current++;
+      step_current=step_current+1;
 % Corrector step
       xcp = xp;  ycp = 0.5*(yp+yo);  ucp = 0.5*(up+uo);  vcp = 0.5*(vp+vo);
      [xn,yn,un,vn] = MOC_2D_steady_irrotational_solve_free_pressure ( xcp,ycp,ucp,vcp,...
@@ -39,13 +39,13 @@ function [xo,yo,uo,vo] = MOC_2D_steady_irrotational_free_pressure ( xw,yw,uw,vw,
       % Check if we converged on the position and on the velocity components
       if (abs(error_pos)<eps_pos && abs(error_vel)<eps_vel)
         break;
-      endif
+      end
       if (step_current>step_max)
         error('The maximum of iterations for the predictor-corrector algorithm has been reached. Stopping the execution...')
-      endif
+      end
    end
    
-endfunction
+end
 
 
 function [xn,yn,un,vn] = MOC_2D_steady_irrotational_solve_free_pressure ( xp,yp,up,vp,...
@@ -87,4 +87,4 @@ function [xn,yn,un,vn] = MOC_2D_steady_irrotational_solve_free_pressure ( xp,yp,
   un = (Q*T-R*sqrt(V4^2*(Q^2+R^2)-T^2))/(Q^2+R^2);
   vn = sqrt(V4^2-un^2);
   
-endfunction
+end

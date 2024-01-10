@@ -33,7 +33,7 @@ function [fig1,fig2,fig3] = MOC_2D_steady_irrotational_postprocess(geom,params,p
           output_patch = atand(V./U);
        otherwise
           error('Unknown type of data to display')
-     endswitch
+     end
      
      indP = 0; % to update patch_x_tri, patch_y_tri, patch_c_tri
      indP2 = 0; % to locate in LOC_PATCHES
@@ -47,8 +47,8 @@ function [fig1,fig2,fig3] = MOC_2D_steady_irrotational_postprocess(geom,params,p
                                         X(j_tri(2,I),i_tri(2,I))  ,  Y(j_tri(2,I),i_tri(2,I)) ;...
                                         X(j_tri(3,I),i_tri(3,I))  ,  Y(j_tri(3,I),i_tri(3,I))   ] ; % [x y]
        if ( I == LOC_PATCHES(indP2+1,1)+1 )
-         indP2++; % change of region [ initial-value line ; initial expansion ; nozzle ; plume ]
-       endif
+         indP2=indP2+1; % change of region [ initial-value line ; initial expansion ; nozzle ; plume ]
+       end
        if ( sum( nodes_tri(indN1:indN1+2,1)<plots.patches_xlim ) == 3 )
          % Plot only patches with abscissae below the maximum plot_patches_xlim chosen by user
          faces_tri(indF1,1:3) = [ indN1:indN1+2 ];
@@ -56,10 +56,10 @@ function [fig1,fig2,fig3] = MOC_2D_steady_irrotational_postprocess(geom,params,p
          nodesC_tri(indN1:indN1+2,1) = [ output_patch(j_tri(1,I),i_tri(1,I)) ; ...
                                          output_patch(j_tri(2,I),i_tri(2,I)) ; ...
                                          output_patch(j_tri(3,I),i_tri(3,I))   ] ;
-         indF1 ++;
-       endif
-       indN1 += 3;
-     endfor
+         indF1 =indF1+1;
+       end
+       indN1 = indN1+3;
+     end
      
      indP = 0;
      indP2 = 0;
@@ -69,8 +69,8 @@ function [fig1,fig2,fig3] = MOC_2D_steady_irrotational_postprocess(geom,params,p
                                          X(j_quad(3,I),i_quad(3,I))  ,  Y(j_quad(3,I),i_quad(3,I)) ;...
                                          X(j_quad(4,I),i_quad(4,I))  ,  Y(j_quad(4,I),i_quad(4,I))   ] ; % [x y]
        if ( I == LOC_PATCHES(indP2+1,2)+1 )
-         indP2++; % change of region [ initial-value line ; initial expansion ; nozzle ; plume ]
-       endif
+         indP2=indP2+1; % change of region [ initial-value line ; initial expansion ; nozzle ; plume ]
+       end
        if ( sum( nodes_quad(indN2:indN2+3,1)<plots.patches_xlim ) == 4 )
          % Plot only patches with abscissae below the maximum plot_patches_xlim chosen by user
          faces_quad(indF2,1:4) = [ indN2:indN2+3 ];
@@ -79,24 +79,24 @@ function [fig1,fig2,fig3] = MOC_2D_steady_irrotational_postprocess(geom,params,p
                                           output_patch(j_quad(2,I),i_quad(2,I)) ; ...
                                           output_patch(j_quad(3,I),i_quad(3,I)) ; ...
                                           output_patch(j_quad(4,I),i_quad(4,I))   ] ;
-         indF2 ++;
-       endif
-       indN2 += 4;
-     endfor
+         indF2 =indF2+1;
+       end
+       indN2 =indN2+4;
+     end
      
      if (plot_colours)
      % Plot the left- and right-running characteristics with data
-##       patch('Faces',faces_tri,'Vertices',nodes_tri,'FaceVertexCData',nodesC_tri,...
-##             'FaceColor','interp','LineWidth',1,'LineStyle','-');
-##       patch('Faces',faces_quad,'Vertices',nodes_quad,'FaceVertexCData',nodesC_quad,...
-##             'FaceColor','interp','LineWidth',1,'LineStyle','-');
+%       patch('Faces',faces_tri,'Vertices',nodes_tri,'FaceVertexCData',nodesC_tri,...
+%             'FaceColor','interp','LineWidth',1,'LineStyle','-');
+%       patch('Faces',faces_quad,'Vertices',nodes_quad,'FaceVertexCData',nodesC_quad,...
+%             'FaceColor','interp','LineWidth',1,'LineStyle','-');
      else
      % Plot the left- and right-running characteristics without data
        patch('Faces',faces_tri,'Vertices',nodes_tri/geom.yt,'FaceVertexCData',facesC_tri,...
              'EdgeColor','flat','FaceColor','none','LineWidth',1,'LineStyle','-');
        patch('Faces',faces_quad,'Vertices',nodes_quad/geom.yt,'FaceVertexCData',facesC_quad,...
              'EdgeColor','flat','FaceColor','none','LineWidth',1,'LineStyle','-');
-     endif
+     end
      colormap(jet(256)) ;
      colorbar; colorlim = caxis;
      
@@ -106,7 +106,7 @@ function [fig1,fig2,fig3] = MOC_2D_steady_irrotational_postprocess(geom,params,p
        patch('Faces',faces_quad,'Vertices',nodes_quad/geom.yt,'FaceVertexCData',nodesC_quad,...
              'FaceColor','interp','LineStyle','none');
 
-  endif
+  end
 
   axis equal;
   %axis([0 geom.xe 0 max(max(Y(1,:)))])
@@ -124,7 +124,7 @@ function [fig1,fig2,fig3] = MOC_2D_steady_irrotational_postprocess(geom,params,p
   for I=1:size(X,2) % Find the last index for each column -> this is the axis point
     axisnodesJ = find(U(:,I),1,'last');
     condplot( axisnodesJ , I ) = true;
-  endfor
+  end
   
   [chocked] = get_Laval_theory(geom,params,X(1,wallnodesJ),Y(1,wallnodesJ)) ;
   semilogy(X(1,wallnodesJ)/geom.yt,pressure(1,wallnodesJ)/params.P,'r','linewidth',2); hold on; % Wall nodes
@@ -156,4 +156,4 @@ function [fig1,fig2,fig3] = MOC_2D_steady_irrotational_postprocess(geom,params,p
   lgd=legend; set(legend,'Location','southeast');
   %saveas(fig3,'Mach_number.pdf')
 
-endfunction
+end

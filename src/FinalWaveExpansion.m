@@ -6,4 +6,4 @@ function deltaP = FinalWaveExpansion(deflection,gamma,nu1,Pstag,pambiant)
   
   deltaP = pambiant - p2static ;
   
-endfunction
+end

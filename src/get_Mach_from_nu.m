@@ -10,7 +10,7 @@ function [Mach] = get_Mach_from_nu(nu,gamma)
     assert (nu(k)>0);
     assert (nu(k)<=125.);
     ma(k) = fzero(@(Mach) equation(Mach,nu(k)), guessMach);
-  endfor
+  end
   
   Mach = ma;
-endfunction
+end

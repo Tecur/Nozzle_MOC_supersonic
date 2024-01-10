@@ -36,12 +36,12 @@ function [indI,X,Y,U,V,LENG_INDI,ind_tri,ind_quad,i_tri,j_tri,i_quad,j_quad] = .
       disp('Strong shock wave at the lip point. The MOC cannot handle such problems.')
       disp('Stopping the computation now...')
       return;
-    endif
+    end
   else
     disp('Prandtl-Meyer expansion wave at the exit lip point')
     disp('Need to iterate to find the final angle that matches the static pressure outside the nozzle.')
     plume_case = 2;
-  endif
+  end
 
   params.Pstatic = pressure(1,indI) / params.PRatio ;
 
@@ -66,7 +66,7 @@ function [indI,X,Y,U,V,LENG_INDI,ind_tri,ind_quad,i_tri,j_tri,i_quad,j_quad] = .
         Mach2 = get_Mach_from_nu(nu1+incrdefl*I,params.gamma);
         [~,~,~,a2] = MOC_2D_steady_irrotational_get_thermo2(Mach2,params) ;
         J = 1;
-        indI++;
+        indI=indI+1;
         LENG_INDI(indI)=1;
         X(J,indI) = X(J,indI-1);  Y(J,indI) = Y(J,indI-1); 
         U(J,indI) = Mach2 * a2 * cosd(geom.te+incrdefl*I) ; 
@@ -79,28 +79,28 @@ function [indI,X,Y,U,V,LENG_INDI,ind_tri,ind_quad,i_tri,j_tri,i_quad,j_quad] = .
            [X(J,indI),Y(J,indI),U(J,indI),V(J,indI)] = MOC_2D_steady_irrotational_internal_point( X(J  ,indI-1),Y(J  ,indI-1),U(J  ,indI-1),V(J  ,indI-1),...
                                                                                                   X(J-1,indI  ),Y(J-1,indI  ),U(J-1,indI  ),V(J-1,indI  ),...
                                                                                                   geom,params) ;
-           LENG_INDI(indI)++;
-           ind_quad ++;
+           LENG_INDI(indI)=LENG_INDI(indI)+1;
+           ind_quad=ind_quad+1;
            i_quad(1:4,ind_quad) = [ indI  ; indI-1 ; indI-1 ; indI ] ;
            j_quad(1:4,ind_quad) = [ J-1   ; J-1    ; J      ; J ] ;
-        endfor
+        end
        % Point on the axis of symmetry
-        J++;
+        J=J+1;
         [X(J,indI),Y(J,indI),U(J,indI),V(J,indI)] = MOC_2D_steady_irrotational_internal_point( X(J-1,indI),-Y(J-1,indI),U(J-1,indI),-V(J-1,indI),...
                                                                                                X(J-1,indI), Y(J-1,indI),U(J-1,indI), V(J-1,indI),...
                                                                                                geom,params) ;
-        Y(J,indI) += 1.e-6 ; % To avoid singularity on axis
-        LENG_INDI(indI)++;
-        ind_tri ++;
+        Y(J,indI) = Y(J,indI)+1.e-6 ; % To avoid singularity on axis
+        LENG_INDI(indI)=LENG_INDI(indI)+1;
+        ind_tri =ind_tri+1;
         i_tri(1:3,ind_tri) = [ indI ; indI-1            ; indI ] ;
         j_tri(1:3,ind_tri) = [ J-1  ; LENG_INDI(indI-1) ; J ] ;
         
-     endfor
-  endif
+     end
+  end
   
  % At this point, we are either at the final stage of the Prandtl-Meyer expansion or just after the weak shock
   while 1
-      indI ++;
+      indI=indI+1;
       % Jet point
       J=1;
       LENG_INDI(indI)=1;
@@ -109,10 +109,10 @@ function [indI,X,Y,U,V,LENG_INDI,ind_tri,ind_quad,i_tri,j_tri,i_quad,j_quad] = .
                                                                                             X(J+1,indI-1),Y(J+1,indI-1),U(J+1,indI-1),V(J+1,indI-1),...
                                                                                             geom,params ) ;
       if ( X(J,indI) > (geom.xe+geom.xplume) )
-         indI --;
+         indI =indI-1;
          break;
-      endif
-      ind_tri ++;
+      end
+      ind_tri =ind_tri+1;
       i_tri(1:3,ind_tri) = [ indI-1   ; indI-1 ; indI ] ;
       j_tri(1:3,ind_tri) = [ J    ; J+1    ; J    ] ;
       
@@ -134,11 +134,11 @@ function [indI,X,Y,U,V,LENG_INDI,ind_tri,ind_quad,i_tri,j_tri,i_quad,j_quad] = .
         
         if ( xtmp < X(J-1,indI) )
           disp('Intersection of left-running characteristics inside the plume -> weak shock ')
-          ind_tri ++;
+          ind_tri =ind_tri+1;
           i_tri(1:3,ind_tri) = [ indI ; indI-1 ; indI-1 ] ;
           j_tri(1:3,ind_tri) = [ J-1  ; JJ     ; J+1    ] ;
           continue; % Delete the current point and continue with the next one
-        endif
+        end
         X(J,indI)=xtmp; Y(J,indI)=ytmp; U(J,indI)=utmp; V(J,indI)=vtmp;
         
         test1 = (X(J,indI)-X(J-1,indI))*(Y(J  ,indI-1)-Y(J-1,indI)) - (Y(J,indI)-Y(J-1,indI))*(X(J  ,indI-1)-X(J-1,indI)) ;
@@ -146,14 +146,14 @@ function [indI,X,Y,U,V,LENG_INDI,ind_tri,ind_quad,i_tri,j_tri,i_quad,j_quad] = .
         if (test1*test2<=0) % Intersection of characteristics
            intersection = true;
            break;
-        endif
+        end
         
-        LENG_INDI(indI) ++;
-        ind_quad ++;
+        LENG_INDI(indI) =LENG_INDI(indI)+1;
+        ind_quad =ind_quad+1;
         i_quad(1:4,ind_quad) = [ indI   ; indI-1 ; indI-1 ; indI ] ;
         j_quad(1:4,ind_quad) = [ J-1    ; JJ     ; JJ+1   ; J    ] ;
-        J++;
-      endfor
+        J=J+1;
+      end
       
       if (intersection)
        % Copy the rest of the data for the C- characteristic from the upstream C- characteristic
@@ -166,7 +166,7 @@ function [indI,X,Y,U,V,LENG_INDI,ind_tri,ind_quad,i_tri,j_tri,i_quad,j_quad] = .
          
          disp('Intersection of right-running characteristics inside the plume -> weak shock')
          
-         ind_tri ++;
+         ind_tri =ind_tri+1;
          i_tri(1:3,ind_tri) = [ indI   ; indI-1 ; indI ] ;
          j_tri(1:3,ind_tri) = [ J-1    ; J    ; J    ] ;
       else
@@ -174,13 +174,13 @@ function [indI,X,Y,U,V,LENG_INDI,ind_tri,ind_quad,i_tri,j_tri,i_quad,j_quad] = .
          [X(J,indI),Y(J,indI),U(J,indI),V(J,indI)] = MOC_2D_steady_irrotational_internal_point( X(J-1,indI),-Y(J-1,indI),U(J-1,indI),-V(J-1,indI),...
                                                                                                 X(J-1,indI), Y(J-1,indI),U(J-1,indI), V(J-1,indI),...
                                                                                                 geom,params) ;
-         Y(J,indI) += 1.e-6 ; % To avoid singularity on axis
-         LENG_INDI(indI)++;
-         ind_tri ++;
+         Y(J,indI) = Y(J,indI)+1.e-6 ; % To avoid singularity on axis
+         LENG_INDI(indI)=LENG_INDI(indI)+1;
+         ind_tri =ind_tri+1;
          i_tri(1:3,ind_tri) = [ indI   ; indI-1 ; indI ] ;
          j_tri(1:3,ind_tri) = [ J-1    ; LENG_INDI(indI-1)    ; J    ] ;
-      endif
+      end
    end
      
 
-endfunction
+end

@@ -16,7 +16,7 @@ function [u4,v4,x2,y2,u2,v2] = MOC_2D_steady_irrotational_wall_inverse ( xin,yin
    x(2) = x(3);  y(2) = y(3); u(2) = u(3) ; v(2) = v(3) ;
    [x,y,u,v] = MOC_2D_steady_irrotational_solve_wall_inverse ( x,y,u,v,theta4,geom,params) ;
    while 1
-      step_current++;
+      step_current = step_current+1;
 % Corrector step
       x(2) = x(3);  y(2) = y(3); u(2) = 0.5*(u(2)+u(4)) ; v(2) = 0.5*(v(2)+v(4)) ;
      [xn,yn,un,vn] = MOC_2D_steady_irrotational_solve_wall_inverse ( x,y,u,v,theta4,geom,params) ;
@@ -26,16 +26,16 @@ function [u4,v4,x2,y2,u2,v2] = MOC_2D_steady_irrotational_wall_inverse ( xin,yin
       u = un ;      v = vn ;
       if (abs(error_vel)<eps_vel)
         break;
-      endif
+      end
       if (step_current>step_max)
         error('The maximum of iterations for the predictor-corrector algorithm has been reached. Stopping the execution...')
-      endif
+      end
     end
     
     u4 = u(4);    v4 = v(4); % Data at the imposed wall point
     x2 = x(2);    y2 = y(2); 
     u2 = u(2);    v2 = v(2);
-endfunction
+end
 
 function [xn,yn,un,vn] = MOC_2D_steady_irrotational_solve_wall_inverse ( x,y,u,v,theta4,geom,params )
 % x contains the absissae of the 3 nodes required to compute the internal point 2
@@ -69,13 +69,13 @@ function [xn,yn,un,vn] = MOC_2D_steady_irrotational_solve_wall_inverse ( x,y,u,v
     vnn  = v(1) + (xn(2)-x(1))/(x(3)-x(1)) * (v(3)-v(1));
     if (abs(unn-un(2))<eps_vel && abs(vnn-vn(2))<eps_vel)
       break;
-    endif
+    end
     if (step_current>steps_max)
       error('Could not converge to a position for the new internal point')
-    endif
+    end
     un(2) = unn;
     vn(2) = vnn;
-    step_current++;
+    step_current = step_current+1;
   end
   
   % Get the data at point 4 on the wall
@@ -90,4 +90,4 @@ function [xn,yn,un,vn] = MOC_2D_steady_irrotational_solve_wall_inverse ( x,y,u,v
   un(4) = sol(1) ;
   vn(4) = sol(2) ;
   
-endfunction
+end

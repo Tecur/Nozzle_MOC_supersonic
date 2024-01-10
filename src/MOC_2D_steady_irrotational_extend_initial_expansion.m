@@ -21,7 +21,7 @@ function [indI,X,Y,U,V,LENG_INDI,ind_tri,ind_quad,i_tri,j_tri,i_quad,j_quad] = .
   i_quad    = i_quadin;
   j_quad    = j_quadin;
   for I = 1:length(geom.circdownX)
-     indI ++;
+     indI = indI+1;
      theta4 = geom.circdownTheta(I);
      LENG_INDI(indI)=1;
      J=1;
@@ -46,22 +46,22 @@ function [indI,X,Y,U,V,LENG_INDI,ind_tri,ind_quad,i_tri,j_tri,i_quad,j_quad] = .
          % If the C+ characteristic exits the geometry of the nozzle, delete the last computed point
            disp('... Initial expansion: deleting a point outside of the nozzle')
            continue;
-        endif
+        end
         X(J,indI)=xtmp; Y(J,indI)=ytmp; U(J,indI)=utmp; V(J,indI)=vtmp;
-        LENG_INDI(indI)++;
-        ind_quad ++;
+        LENG_INDI(indI) = LENG_INDI(indI)+1;
+        ind_quad = ind_quad+1;
         i_quad(1:4,ind_quad) = [ indI   ; indI-1 ; indI-1 ; indI ] ;
         j_quad(1:4,ind_quad) = [ J-1    ; JJ-1    ; JJ      ; J    ] ;
-        J++;
-     endfor
+        J = J+1;
+     end
      % Point on the axis of symmetry
      [X(J,indI),Y(J,indI),U(J,indI),V(J,indI)] = MOC_2D_steady_irrotational_internal_point( X(J-1,indI),-Y(J-1,indI),U(J-1,indI),-V(J-1,indI),...
                                                                                             X(J-1,indI), Y(J-1,indI),U(J-1,indI), V(J-1,indI),...
                                                                                             geom,params) ;
-     Y(J,indI) += 1.e-6 ; % To avoid singularity on axis
-     LENG_INDI(indI)++;
-     ind_tri ++;
+     Y(J,indI) = Y(J,indI)+1.e-6 ; % To avoid singularity on axis
+     LENG_INDI(indI) = LENG_INDI(indI)+1;
+     ind_tri = ind_tri+1;
      i_tri(1:3,ind_tri) = [ indI   ; indI-1 ; indI ] ;
      j_tri(1:3,ind_tri) = [ J-1    ; JJ    ; J    ] ;
-  endfor
-endfunction
+  end
+end

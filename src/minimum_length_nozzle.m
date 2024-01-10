@@ -32,7 +32,7 @@ for k=2:num_rays
   
   abs(1,k) = (throat_rad-ord(1,k-1)+abs(1,k-1)*meanSlopeplus) / (meanSlopeplus-meanSlopeminus);
   ord(1,k) = throat_rad + meanSlopeminus*abs(1,k);
-endfor
+end
 
 k = num_rays;
 Wall(1,:) = [ Kminus(k) Kplus(k) theta(k) nu(k) Mach(k) mu(k) ] ;
@@ -68,9 +68,9 @@ for j=2:num_rays
       meanSlopeminus     = 0.5 * ( theta(j-1,k+1) + theta(j,k) - mu(j-1,k+1) - mu(j,k) ) / rad2deg ;
       abs(j,k)           = (ord(j-1,k+1)-ord(j,k-1)+abs(j,k-1)*meanSlopeplus-abs(j-1,k+1)*meanSlopeminus) / (meanSlopeplus-meanSlopeminus);
       ord(j,k)           = ord(j-1,k+1) + meanSlopeminus*(abs(j,k)-abs(j-1,k+1));
-    endif
+    end
     
-  endfor
+  end
   
   Wall(j,:) = [ Kminus(j,lk) Kplus(j,lk) theta(j,lk) nu(j,lk) Mach(j,lk) mu(j,lk) ] ;
   
@@ -78,7 +78,7 @@ for j=2:num_rays
   meanSlopeWall = 0.5 * ( Wall(j-1,3) + Wall(j,3) ) / rad2deg ;
   absWall(j) = (ordWall(j-1)-ord(j,lk)+abs(j,lk)*meanSlopeplus-absWall(j-1)*meanSlopeWall) / (meanSlopeplus-meanSlopeWall);
   ordWall(j) = ordWall(j-1) + meanSlopeWall*(absWall(j)-absWall(j-1));
-endfor
+end
 
 ind=1; len = num_rays;
 for j=1:num_rays
@@ -86,8 +86,8 @@ for j=1:num_rays
   ordp(ind:ind+len-1) = ord(j,1:len);
   Machp(ind:ind+len-1) = Mach(j,1:len);
   ind=ind+len;
-  len--;
-endfor
+  len=len-1;
+end
 %plot(abs,ord,'k+',[0 absWall],[throat_rad ordWall],'r+'); grid on; axis equal
 
 scatter(absp,ordp,25,Machp,'filled'); hold on; grid on; colorbar; 

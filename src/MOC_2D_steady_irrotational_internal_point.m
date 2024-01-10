@@ -20,7 +20,7 @@ function [xo,yo,uo,vo] = MOC_2D_steady_irrotational_internal_point ( xp,yp,up,vp
                                                                      x_orig,y_orig,u_orig,v_orig,...
                                                                      geom,params ) ;
    while 1
-      step_current++;
+      step_current = step_current+1;
 % Corrector step
       xcp = xp; ycp = 0.5*(yp+yo) ; ucp = 0.5*(up+uo) ; vcp = 0.5*(vp+vo) ;
       xcm = xm; ycm = 0.5*(ym+yo) ; ucm = 0.5*(um+uo) ; vcm = 0.5*(vm+vo) ;
@@ -35,13 +35,13 @@ function [xo,yo,uo,vo] = MOC_2D_steady_irrotational_internal_point ( xp,yp,up,vp
       % Check if we converged on the position and on the velocity components
       if (abs(error_pos)<eps_pos && abs(error_vel)<eps_vel)
         break;
-      endif
+      end
       if (step_current>step_max)
         error('The maximum of iterations for the predictor-corrector algorithm has been reached. Stopping the execution...')
-      endif
+      end
    end
    
-endfunction
+end
 
 function [xn,yn,un,vn] = MOC_2D_steady_irrotational_solve_internal_point ( xp,yp,up,vp,...
                                                                            xm,ym,um,vm,...
@@ -78,4 +78,4 @@ function [xn,yn,un,vn] = MOC_2D_steady_irrotational_solve_internal_point ( xp,yp
   un   = new_vel(1) ;
   vn   = new_vel(2) ;
   
-endfunction
+end

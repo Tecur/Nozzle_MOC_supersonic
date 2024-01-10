@@ -61,8 +61,8 @@ ythroat = 0:geom.yt/(geom.NI-1):geom.yt;
 [xsonic,xvnull,uvnull] = MOC_2D_steady_irrotational_IVLINE ( geom , params , ythroat );
 vvnull = 0;
 
-ythroat(1) += 1.e-6; % To avoid singularity on axis
-uvnull(1)  += 1.e-6; % To avoid singularity on axis
+ythroat(1) = ythroat(1) + 1.e-6; % To avoid singularity on axis
+uvnull(1)  = uvnull(1) + 1.e-6; % To avoid singularity on axis
 
 X(1,1) = xvnull(1);
 Y(1,1) = ythroat(1);
@@ -79,7 +79,7 @@ V(1,1) = vvnull;
 disp('Computing the extent from the initial-value line...')
 [indI,X,Y,U,V,LENG_INDI,ind_patch_tri,ind_patch_quad,patch_i_tri,patch_j_tri,patch_i_quad,patch_j_quad] = ...
                                     MOC_2D_steady_irrotational_extend_initial_line(geom,params,...
-                                                                                   xvnull,ythroat,uvnull,vvnull,
+                                                                                   xvnull,ythroat,uvnull,vvnull,...
                                                                                    X,Y,U,V) ;
 LOC_PATCHES(1,:) = [ind_patch_tri  ind_patch_quad]; % Used to locate the different regions when plotting the patches
 
